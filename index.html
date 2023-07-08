@@ -8,7 +8,9 @@
     <h1>Gerenciamento de Contratos</h1>
 
     <form id="contract-form">
-        <h2>Cadastrar Contrato</h2>
+        <h2>Cadastrar/Editar Contrato</h2>
+        <input type="hidden" id="contract-id">
+
         <label for="client-name">Nome do Cliente:</label>
         <input type="text" id="client-name" required>
 
@@ -21,7 +23,25 @@
         <label for="signature-date">Data de Assinatura:</label>
         <input type="date" id="signature-date" required>
 
-        <input type="submit" value="Cadastrar">
+        <div id="form-buttons">
+            <input type="submit" value="Cadastrar">
+        </div>
+    </form>
+
+    <h2>Buscar Contratos</h2>
+    <form id="search-form">
+        <label for="search-term">Termo de Busca:</label>
+        <input type="text" id="search-term" required>
+
+        <label for="search-column">Coluna de Busca:</label>
+        <select id="search-column" required>
+            <option value="client_name">Nome do Cliente</option>
+            <option value="contract_number">Número do Contrato</option>
+            <option value="value">Valor</option>
+            <option value="signature_date">Data de Assinatura</option>
+        </select>
+
+        <input type="submit" value="Buscar">
     </form>
 
     <h2>Listagem de Contratos</h2>
@@ -33,6 +53,7 @@
                 <th>Número do Contrato</th>
                 <th>Valor</th>
                 <th>Data de Assinatura</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>

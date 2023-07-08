@@ -38,48 +38,95 @@ def create_contract():
     conn.close()
     return jsonify({'message': 'Contrato cadastrado com sucesso'})
 
+# @app.route('/contracts/<id>', methods=['GET'])
+# def get_contract(id):
+#     conn = create_connection()
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT * FROM contracts WHERE id=?", (id,))
+#     contract = cursor.fetchone()
+#     if not contract:
+#         return jsonify({'message': 'Contrato não encontrado'})
+#     contract_data = {}
+#     contract_data['id'] = contract[0]
+#     contract_data['client_name'] = contract[1]
+#     contract_data['contract_number'] = contract[2]
+#     contract_data['value'] = contract[3]
+#     contract_data['signature_date'] = contract[4]
+#     conn.close()
+#     return jsonify(contract_data)
+
+# Rota para buscar contratos
 @app.route('/contracts', methods=['GET'])
-def get_all_contracts():
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM contracts")
-    contracts = cursor.fetchall()
-    result = []
-    for contract in contracts:
-        contract_data = {}
-        contract_data['id'] = contract[0]
-        contract_data['client_name'] = contract[1]
-        contract_data['contract_number'] = contract[2]
-        contract_data['value'] = contract[3]
-        contract_data['signature_date'] = contract[4]
-        result.append(contract_data)
-    conn.close()
-    return jsonify(result)
+def search_contracts():
+    search_term = request.args.get('search', '')
+    search_column = request.args.get('column', '')
 
-@app.route('/contracts/<id>', methods=['GET'])
-def get_contract(id):
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM contracts WHERE id=?", (id,))
-    contract = cursor.fetchone()
-    if not contract:
-        return jsonify({'message': 'Contrato não encontrado'})
-    contract_data = {}
-    contract_data['id'] = contract[0]
-    contract_data['client_name'] = contract[1]
-    contract_data['contract_number'] = contract[2]
-    contract_data['value'] = contract[3]
-    contract_data['signature_date'] = contract[4]
-    conn.close()
-    return jsonify(contract_data)
+    if search_term and search_column:
+        # Conectar-se ao banco de dados SQLite
+        conn = sqlite3.connect('contracts.db')
+        cursor = conn.cursor()
 
-@app.route('/contracts', methods=['PUT'])
-def update_contract():
+        # Executar consulta SQL para buscar contratos
+        cursor.execute(
+            f"SELECT * FROM contracts WHERE {search_column} LIKE ?",
+            (f"%{search_term}%",)
+        )
+
+        # Extrair os resultados da consulta
+        results = cursor.fetchall()
+
+        # Montar a lista de contratos como dicionários
+        contracts = []
+        for row in results:
+            contract = {
+                'id': row[0],
+                'client_name': row[1],
+                'contract_number': row[2],
+                'value': row[3],
+                'signature_date': row[4]
+            }
+            contracts.append(contract)
+
+        # Fechar a conexão com o banco de dados
+        conn.close()
+
+        return jsonify(contracts)
+    else:
+        # Retorna todos os contratos se nenhum termo de busca for fornecido
+        # Conectar-se ao banco de dados SQLite
+        conn = sqlite3.connect('contracts.db')
+        cursor = conn.cursor()
+
+        # Executar consulta SQL para buscar todos os contratos
+        cursor.execute("SELECT * FROM contracts")
+
+        # Extrair os resultados da consulta
+        results = cursor.fetchall()
+
+        # Montar a lista de contratos como dicionários
+        contracts = []
+        for row in results:
+            contract = {
+                'id': row[0],
+                'client_name': row[1],
+                'contract_number': row[2],
+                'value': row[3],
+                'signature_date': row[4]
+            }
+            contracts.append(contract)
+
+        # Fechar a conexão com o banco de dados
+        conn.close()
+
+        return jsonify(contracts)
+
+@app.route('/contracts/<id>', methods=['PUT'])
+def update_contract(id):
     data = request.get_json()
     conn = create_connection()
     cursor = conn.cursor()
     cursor.execute("UPDATE contracts SET client_name=?, contract_number=?, value=?, signature_date=? WHERE id=?",
-                   (data['client_name'], data['contract_number'], data['value'], data['signature_date'], data['id']))
+                   (data['client_name'], data['contract_number'], data['value'], data['signature_date'], id))
     conn.commit()
     conn.close()
     return jsonify({'message': 'Contrato atualizado com sucesso'})
