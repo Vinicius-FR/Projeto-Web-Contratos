@@ -12,10 +12,12 @@ O sistema permite cadastrar, buscar, editar e excluir contratos, fornecendo uma 
 
 ## Configuração do Ambiente
 
-1. Clone este repositório para o seu ambiente local (ou baixe os arquivos manualmente em uma mesma pasta)
+1. Clone este repositório para o seu ambiente local (ou baixe os arquivos manualmente em uma mesma pasta).
 
-2. Execute o back-end do projeto (contracts_api.py) em algum compilador de Python (como no Visual Studio Code mesmo)
+2. Verifique se há uma pasta "uploads" no local onde está os outros arquivos do projeto.
 
-3. Com o back-end rodando na porta 5000 do seu localhost (http://localhost:5000), abra o front-end (index.html) com o navegador de sua preferência.
+3. Execute o back-end do projeto (contracts_api.py) em algum compilador de Python (como no Visual Studio Code mesmo).
 
-4. Pronto, o site já deve estar pronto para cadastros, buscas e edições, armazenando seus feitos mesmo que você desligue e ligue novamente o back-end ou caso feche o navegador, por conta do banco de dados.
+4. Com o back-end rodando na porta 5000 do seu localhost (http://localhost:5000), abra o front-end (index.html) com o navegador de sua preferência.
+
+5. Pronto, o site já deve estar pronto para cadastros, buscas e edições, armazenando seus feitos mesmo que você desligue e ligue novamente o back-end ou caso feche o navegador, por conta do banco de dados.
