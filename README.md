@@ -14,7 +14,7 @@ O sistema permite cadastrar, buscar, editar e excluir contratos, fornecendo uma 
 
 1. Clone este repositório para o seu ambiente local (ou baixe os arquivos manualmente em uma mesma pasta).
 
-2. Verifique se há uma pasta "uploads" no local onde está os outros arquivos do projeto.
+2. Verifique se há uma pasta "uploads" no local onde está os outros arquivos do projeto, nela que serão armazenados os PDFs, então é essencial que ela exista na raiz do projeto.
 
 3. Execute o back-end do projeto (contracts_api.py) em algum compilador de Python (como no Visual Studio Code mesmo).
 
