@@ -139,6 +139,7 @@ function editContract(event) {
   const contractNumber = document.querySelector('#contract-number').value;
   const value = document.querySelector('#value').value;
   const signatureDate = document.querySelector('#signature-date').value;
+  const pdfFile = document.querySelector('#pdf-file').files[0];
 
   if (!validateName(clientName)) {
     alert('O campo Nome deve ter no mínimo 3 caracteres.');
@@ -160,19 +161,16 @@ function editContract(event) {
     return;
   }
 
-  const contractData = {
-    client_name: clientName,
-    contract_number: contractNumber,
-    value: parseFloat(value),
-    signature_date: signatureDate
-  };
+  const contractData = new FormData();
+  contractData.append('client_name', clientName);
+  contractData.append('contract_number', contractNumber);
+  contractData.append('value', value);
+  contractData.append('signature_date', signatureDate);
+  contractData.append('pdf_file', pdfFile);
 
   fetch(`http://localhost:5000/contracts/${contractId}`, { // URL relativa para a rota /contracts/{id}
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(contractData)
+    body: contractData
   })
     .then(response => response.json())
     .then(data => {

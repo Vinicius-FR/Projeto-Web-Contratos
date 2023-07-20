@@ -137,17 +137,25 @@ def update_contract(id):
     contract_number = request.form['contract_number']
     value = request.form['value']
     signature_date = request.form['signature_date']
+    pdf_file = request.files['pdf_file']
 
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE contracts SET client_name=?, contract_number=?, value=?, signature_date=? WHERE id=?",
-        (client_name, contract_number, value, signature_date, id)
-    )
-    conn.commit()
-    conn.close()
+    if pdf_file and allowed_file(pdf_file.filename):
+        filename = secure_filename(pdf_file.filename)
+        pdf_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-    return jsonify({'message': 'Contrato atualizado com sucesso'})
+        conn = create_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE contracts SET client_name=?, contract_number=?, value=?, signature_date=? WHERE id=?",
+            (client_name, contract_number, value, signature_date, id)
+        )
+        conn.commit()
+        conn.close()
+
+        return jsonify({'message': 'Contrato atualizado com sucesso'})
+    else:
+        return jsonify({'message': 'Erro ao atualizar contrato. Arquivo PDF não fornecido ou formato inválido.'})
+
 
 @app.route('/contracts/<id>', methods=['DELETE'])
 def delete_contract(id):
