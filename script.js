@@ -1,6 +1,26 @@
 // Variável global para controlar se estamos editando um contrato existente
 let editingContractId = null;
 
+function formatarNumero(input) {
+  // Remove caracteres não numéricos, exceto o ponto
+  const valorSemPontos = input.value.replace(/[^\d,]/g, '');
+  
+  // Separa a parte inteira da parte decimal
+  const [parteInteira, parteDecimal] = valorSemPontos.split('.');
+
+  // Formata a parte inteira, adicionando o ponto de milhar a cada 3 dígitos
+  const parteInteiraFormatada = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+  // Concatena novamente a parte inteira e a parte decimal (se houver)
+  let valorFormatado = parteInteiraFormatada;
+  if (parteDecimal !== undefined) {
+    valorFormatado += ',' + parteDecimal;
+  }
+
+  // Atualiza o valor no campo de entrada
+  input.value = valorFormatado;
+}
+
 // Função para buscar e exibir os contratos cadastrados
 function fetchContracts() {
   fetch('http://localhost:5000/contracts') // URL relativa para a rota /contracts
